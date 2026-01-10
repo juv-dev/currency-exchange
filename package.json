@@ -25,7 +25,7 @@
   "dependencies": {
     "@fontsource/rubik": "^5.2.6",
     "@tailwindcss/vite": "^4.1.13",
-    "firebase": "^12.2.1",
+    "firebase": "^12.7.0",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.13",
     "vue": "^3.5.18"
