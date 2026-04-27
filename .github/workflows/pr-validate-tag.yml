@@ -1,0 +1,9 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  PR:
+    uses: juv-dev/workflows-frontend/.github/workflows/pr-validate-tag.yml@main
