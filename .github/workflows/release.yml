@@ -1,0 +1,11 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  Release:
+    uses: juv-dev/workflows-frontend/.github/workflows/release.yml@main
+    secrets: inherit
