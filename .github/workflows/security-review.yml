@@ -1,0 +1,13 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  PR:
+    uses: juv-dev/workflows-frontend/.github/workflows/security-review.yml@main

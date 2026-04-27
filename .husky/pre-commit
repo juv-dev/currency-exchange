@@ -1,0 +1,23 @@
+#!/bin/bash
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.(ts|vue|tsx|jsx|js|astro)$" || true)
+
+[ -z "$STAGED" ] && exit 0
+
+FAILED=false
+
+for FILE in $STAGED; do
+  if git show ":$FILE" | grep -nE "console\.(log|warn|error|debug|info)" > /dev/null 2>&1; then
+    echo "console.* in $FILE:"
+    git show ":$FILE" | grep -nE "console\.(log|warn|error|debug|info)"
+    FAILED=true
+  fi
+done
+
+if [ "$FAILED" = true ]; then
+  echo ""
+  echo "Remove console.* before committing."
+  exit 1
+fi
+
+exit 0

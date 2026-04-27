@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onUnmounted, watch, nextTick, computed, onMounted } from 'vue';
-import { useExchangeStore } from '@/stores/exchange';
+import { useExchangeStore } from '~/stores/exchange';
 
 const inputRef = ref<HTMLInputElement | null>(null);
 

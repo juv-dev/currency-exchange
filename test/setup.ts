@@ -1,7 +1,5 @@
-// Configuración global para las pruebas
-import { expect, beforeEach, vi } from 'vitest';
+import { beforeEach } from 'vitest';
 
-// Configuración de localStorage mock
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
@@ -18,12 +16,10 @@ const localStorageMock = (() => {
   };
 })();
 
-// Asigna el mock de localStorage al objeto global
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
 });
 
-// Limpiar localStorage antes de cada prueba
 beforeEach(() => {
   window.localStorage.clear();
 });

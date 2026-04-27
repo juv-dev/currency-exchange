@@ -1,0 +1,11 @@
+packages:
+  - .
+
+onlyBuiltDependencies:
+  - esbuild
+  - vue-demi
+
+pnpm:
+  minimumReleaseAge: 1440
+  blockExoticSubdeps: true
+  trustPolicy: no-downgrade
