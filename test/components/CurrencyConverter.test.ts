@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/vue';
+import { render, screen, fireEvent, waitFor } from '@testing-library/vue';
 import { createPinia, setActivePinia } from 'pinia';
+import { reactive } from 'vue';
 import CurrencyConverter from '~/components/CurrencyConverter.vue';
 import { useExchangeStore } from '~/stores/exchange';
 
@@ -30,7 +31,7 @@ describe('CurrencyConverter.vue', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
 
-    store = {
+    store = reactive({
       purchasePrice: 3.8,
       salePrice: 3.9,
       loading: false,
@@ -38,7 +39,7 @@ describe('CurrencyConverter.vue', () => {
       convertToDollars: vi.fn().mockImplementation((soles: number) => soles / 3.8),
       convertToSoles: vi.fn().mockImplementation((dollars: number) => dollars * 3.8),
       $reset: vi.fn()
-    };
+    });
 
     (useExchangeStore as ReturnType<typeof vi.fn>).mockReturnValue(store);
   });
@@ -179,5 +180,33 @@ describe('CurrencyConverter.vue', () => {
 
     await fireEvent.update(input, '100');
     expect(button.closest('button')?.disabled).toBe(false);
+  });
+
+  it('should recalculate toAmount when rates change after conversion', async () => {
+    render(CurrencyConverter);
+
+    const input = await screen.findByRole('textbox');
+    await fireEvent.update(input, '100');
+    await fireEvent.click(await screen.findByText('Iniciar operación'));
+
+    const callsBefore = (store.convertToSoles as ReturnType<typeof vi.fn>).mock.calls.length;
+
+    store.purchasePrice = 4.0;
+
+    await waitFor(() => {
+      expect((store.convertToSoles as ReturnType<typeof vi.fn>).mock.calls.length).toBeGreaterThan(callsBefore);
+    });
+  });
+
+  it('should initialize amounts when loading transitions from true to false', async () => {
+    store.loading = true;
+    render(CurrencyConverter);
+
+    store.loading = false;
+
+    await waitFor(() => {
+      const input = screen.getByRole('textbox') as HTMLInputElement;
+      expect(input.value).toBe(store.purchasePrice.toFixed(3));
+    });
   });
 });

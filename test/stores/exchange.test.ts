@@ -23,7 +23,7 @@ vi.mock('~/firebase/config', () => ({
 
 type MockSnapshot = {
   exists: () => boolean;
-  data: () => { purchase_price?: number; sale_price?: number };
+  data: () => { purchase_price?: number; sale_price?: number } | null;
 };
 
 describe('useExchangeStore', () => {
@@ -110,5 +110,52 @@ describe('useExchangeStore', () => {
   it('should convert dollars to soles using purchase price', () => {
     store.purchasePrice = 3.9;
     expect(store.convertToSoles(10)).toBeCloseTo(39);
+  });
+
+  it('should return 0 from convertToDollars when salePrice is 0', () => {
+    expect(store.convertToDollars(100)).toBe(0);
+  });
+
+  it('should return 0 from convertToSoles when purchasePrice is 0', () => {
+    expect(store.convertToSoles(100)).toBe(0);
+  });
+
+  it('should set error when document does not exist', async () => {
+    mockOnNext({
+      exists: () => false,
+      data: () => ({}),
+    });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(store.error).toBe('No se encontró el documento de tasas de cambio');
+    expect(store.loading).toBe(false);
+  });
+
+  it('should use 0 as default when data has no prices', async () => {
+    mockOnNext({
+      exists: () => true,
+      data: () => ({}),
+    });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(store.purchasePrice).toBe(0);
+    expect(store.salePrice).toBe(0);
+  });
+
+  it('should not update state when data is null', async () => {
+    mockOnNext({
+      exists: () => true,
+      data: () => null,
+    });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(store.purchasePrice).toBe(0);
+    expect(store.loading).toBe(true);
+  });
+
+  it('should expose correct values via rates computed', async () => {
+    mockOnNext({
+      exists: () => true,
+      data: () => ({ purchase_price: 3.85, sale_price: 3.95 }),
+    });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(store.rates).toEqual({ purchase: 3.85, sale: 3.95 });
   });
 });
