@@ -1,0 +1,14 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  PR:
+    uses: juv-dev/workflows-frontend/.github/workflows/pr-unit-test.yml@main
+    secrets: inherit

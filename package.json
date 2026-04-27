@@ -2,14 +2,8 @@
   "name": "currency-exchange",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/jugaz21/currency-exchange#readme",
-  "bugs": {
-    "url": "https://github.com/jugaz21/currency-exchange/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jugaz21/currency-exchange.git"
-  },
+ 
+  "packageManager": "pnpm@10.12.1",
   "license": "ISC",
   "author": "Jesús Ugaz",
   "type": "module",
@@ -18,30 +12,37 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "test:only": "vitest run",
-    "test:ui": "vitest --ui",
-    "coverage": "vitest run --coverage"
+    "test:watch": "vitest watch",
+    "test:ui": "vitest --ui --coverage.enabled=true",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/ test/",
+    "lint:fix": "eslint src/ test/ --fix",
+    "format": "prettier --write \"src/**/*.{ts,vue}\" \"test/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.{ts,vue}\" \"test/**/*.ts\"",
+    "prepare": "husky"
   },
   "dependencies": {
-    "@fontsource/rubik": "^5.2.6",
-    "@tailwindcss/vite": "^4.1.13",
-    "firebase": "^12.2.1",
-    "pinia": "^3.0.3",
-    "tailwindcss": "^4.1.13",
-    "vue": "^3.5.18"
+    "@fontsource/rubik": "5.2.6",
+    "@tailwindcss/vite": "4.1.13",
+    "firebase": "12.2.1",
+    "pinia": "3.0.3",
+    "tailwindcss": "4.1.13",
+    "vue": "3.5.18"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.8.0",
-    "@testing-library/vue": "^8.1.0",
-    "@types/jsdom": "^21.1.7",
-    "@types/node": "^24.3.3",
-    "@vitejs/plugin-vue": "^6.0.1",
+    "@testing-library/jest-dom": "6.8.0",
+    "@testing-library/vue": "8.1.0",
+    "@types/jsdom": "21.1.7",
+    "@types/node": "24.3.3",
+    "@vitejs/plugin-vue": "6.0.1",
     "@vitest/coverage-v8": "3.2.4",
-    "@vue/tsconfig": "^0.8.1",
-    "jsdom": "^26.1.0",
-    "typescript": "~5.8.3",
-    "vite": "^7.1.2",
+    "@vue/tsconfig": "0.8.1",
+    "husky": "9.1.7",
+    "jsdom": "26.1.0",
+    "typescript": "5.8.3",
+    "vite": "7.3.2",
     "vitest": "3.2.4",
-    "vue-tsc": "^3.0.5"
+    "vue-tsc": "3.0.5"
   }
 }

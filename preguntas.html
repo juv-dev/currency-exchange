@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Técnicas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+
+        .qa {
+            background: #f8fafc;
+            border-left: 4px solid #4299e1;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .qa h3 {
+            color: #2c5282;
+            margin-top: 0;
+        }
+
+        .qa pre {
+            background: #edf2f7;
+            border-left: 3px solid #4299e1;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+        }
+
+        .toc {
+            width: 350px;
+            min-width: 350px;
+            position: sticky;
+            top: 20px;
+            max-height: 100vh;
+            overflow-y: auto;
+            padding-right: 30px;
+            font-size: 0.95em;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #2c3e50;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .toc a:hover {
+            background: #f0f4f8;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #2c3e50;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        h1 {
+            border: none;
+            color: #1a365d;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+        }
+
+        .back-to-top {
+            display: inline-block;
+            margin-top: 20px;
+            color: #4299e1;
+            text-decoration: none;
+        }
+
+        .back-to-top:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="toc">
+            <h2>Tabla de Contenidos</h2>
+            <ul>
+                <li><a href="#funcionalidades-principales">1. Funcionalidades Principales</a>
+                    <ul>
+                        <li><a href="#conversion-monedas">1.1 Conversión de Monedas</a></li>
+                        <li><a href="#manejo-estados">1.2 Manejo de Estados</a></li>
+                        <li><a href="#interfaz-usuario">1.3 Interfaz de Usuario</a></li>
+                    </ul>
+                </li>
+                <li><a href="#implementacion">2. Implementación Técnica</a>
+                    <ul>
+                        <li><a href="#reactividad">2.1 Reactividad</a></li>
+                        <li><a href="#tipado">2.2 Tipado con TypeScript</a></li>
+                        <li><a href="#optimizaciones">2.3 Optimizaciones</a></li>
+                    </ul>
+                </li>
+                <li><a href="#preguntas-codigo">3. Preguntas de Código</a>
+                    <ul>
+                        <li><a href="#handleinput">3.1 Función handleInput</a></li>
+                        <li><a href="#conversion">3.2 Lógica de Conversión</a></li>
+                        <li><a href="#suscripciones">3.3 Manejo de Suscripciones</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <h1 id="funcionalidades-principales">1. Funcionalidades Principales</h1>
+
+            <h2 id="conversion-monedas">1.1 Conversión de Monedas</h2>
+            <p>El sistema permite la conversión entre dólares (USD) y soles (PEN) con tasas de cambio en tiempo real:</p>
+            <ul>
+                <li>Conversión de USD a PEN (compra/venta)</li>
+                <li>Conversión de PEN a USD (compra/venta)</li>
+                <li>Actualización en tiempo real de las tasas</li>
+                <li>Interfaz intuitiva con pestañas para compra/venta</li>
+            </ul>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h2 id="manejo-estados">1.2 Manejo de Estados</h2>
+            <p>El estado de la aplicación se gestiona mediante Pinia, con un store dedicado para las tasas de cambio:</p>
+            <pre><code>// store/exchange.ts
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+
+export const useExchangeStore = defineStore('exchange', () => {
+  const purchasePrice = ref(0);  // Tasa de compra
+  const salePrice = ref(0);      // Tasa de venta
+  const loading = ref(true);
+  const error = ref<string | null>(null);
+
+  // Getters computados
+  const rates = computed(() => ({
+    purchase: purchasePrice.value,
+    sale: salePrice.value
+  }));
+
+  // Funciones de conversión
+  function convertToSoles(amount: number): number {
+    return amount * purchasePrice.value;
+  }
+
+  function convertToDollars(amount: number): number {
+    return amount / salePrice.value;
+  }
+
+  return {
+    purchasePrice,
+    salePrice,
+    loading,
+    error,
+    rates,
+    convertToSoles,
+    convertToDollars
+  };
+});</code></pre>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h2 id="interfaz-usuario">1.3 Interfaz de Usuario</h2>
+            <p>La interfaz está diseñada para ser intuitiva y responsiva:</p>
+            <ul>
+                <li>Selector de tipo de operación (compra/venta)</li>
+                <li>Campos de entrada con formato automático</li>
+                <li>Visualización clara de las tasas actuales</li>
+                <li>Indicadores de carga y error</li>
+                <li>Diseño responsivo para móviles y escritorio</li>
+            </ul>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h1 id="implementacion">2. Implementación Técnica</h1>
+
+            <h2 id="reactividad">2.1 Reactividad en el Conversor</h2>
+            <p>La aplicación utiliza el sistema de reactividad de Vue 3 de manera eficiente:</p>
+            <pre><code>// En CurrencyConverter.vue
+const exchangeStore = useExchangeStore();
+const activeTab = ref('Compra');
+const amount = ref('');
+const result = ref('');
+
+// Actualizar resultado cuando cambia el monto o la pestaña
+watch([amount, activeTab], () => {
+  if (!amount.value) {
+    result.value = '';
+    return;
+  }
+  
+  const numericAmount = parseFloat(amount.value);
+  if (isNaN(numericAmount)) return;
+
+  if (activeTab.value === 'Compra') {
+    result.value = exchangeStore.convertToSoles(numericAmount).toFixed(2);
+  } else {
+    result.value = exchangeStore.convertToDollars(numericAmount).toFixed(2);
+  }
+});</code></pre>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+
+
+
+            <h2 id="tipado">2.2 Tipado con TypeScript</h2>
+            <p>El proyecto utiliza TypeScript para garantizar la seguridad de tipos:</p>
+            <pre><code>// Tipos para las tasas de cambio
+interface ExchangeRates {
+  purchase_price: number;
+  sale_price: number;
+  last_updated: string;
+}
+
+// Función de conversión con tipos
+type ConversionDirection = 'toPEN' | 'toUSD';
+
+function convertAmount(
+  amount: number, 
+  rates: ExchangeRates, 
+  direction: ConversionDirection
+): number {
+  if (direction === 'toPEN') {
+    return amount * rates.purchase_price;
+  } else {
+    return amount / rates.sale_price;
+  }
+}</code></pre>
+            <p>Beneficios del tipado:</p>
+            <ul>
+                <li>Detección temprana de errores</li>
+                <li>Mejor documentación del código</li>
+                <li>Autocompletado en el editor</li>
+                <li>Refactorización más segura</li>
+            </ul>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h2 id="optimizaciones">2.3 Optimizaciones de Rendimiento</h2>
+            <p>Se implementaron varias optimizaciones para mejorar el rendimiento:</p>
+            <pre><code>// 1. Uso de computed properties para valores derivados
+const formattedAmount = computed(() => {
+  if (!amount.value) return '0.00';
+  return parseFloat(amount.value).toLocaleString('es-PE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+});
+
+// 2. Throttling para actualizaciones frecuentes
+import { throttle } from 'lodash-es';
+
+const updateRates = throttle((newRates) => {
+  exchangeStore.updateRates(newRates);
+}, 1000); // Máximo una actualización por segundo
+
+// 3. Uso de v-memo para evitar re-renderizados innecesarios
+// En el template:
+// &lt;div v-memo="[exchangeStore.rates]"&gt;
+//   {{ formattedAmount }} {{ activeTab === 'Compra' ? 'USD' : 'PEN' }}
+// &lt;/div&gt;</code></pre>
+            <p>Otras optimizaciones incluyen:</p>
+            <ul>
+                <li>Componentes funcionales para elementos de lista</li>
+                <li>Uso de <code>shallowRef</code> para objetos grandes</li>
+                <li>Code splitting para cargar componentes bajo demanda</li>
+                <li>Lazy loading de rutas</li>
+            </ul>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h1 id="preguntas-codigo">3. Preguntas de Código</h1>
+
+            <h2 id="handleinput">3.1 Función handleInput</h2>
+            <p>La función <code>handleInput</code> se encarga de validar y formatear la entrada del usuario:</p>
+            <pre><code>const handleInput = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  
+  // Solo permite números y un punto decimal
+  value = value.replace(/[^\d.]/g, '');
+  
+  // Maneja múltiples puntos decimales
+  const parts = value.split('.');
+  if (parts.length > 2) {
+    value = `${parts[0]}.${parts.slice(1).join('')}`;
+  }
+  
+  // Limita a 2 decimales
+  if (parts.length === 2) {
+    parts[1] = parts[1].substring(0, 2);
+    value = parts.join('.');
+  }
+  
+  // Actualiza el valor
+  amount.value = value;
+};</code></pre>
+            <p>Esta función garantiza que la entrada del usuario sea siempre un número válido con hasta dos decimales.</p>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h2 id="conversion">3.2 Lógica de Conversión</h2>
+            <p>La lógica principal de conversión se maneja en el store de Pinia:</p>
+            <pre><code>// En store/exchange.ts
+function convert(amount: number, from: 'USD' | 'PEN', to: 'USD' | 'PEN'): number {
+  if (from === to) return amount;
+  
+  if (from === 'USD' && to === 'PEN') {
+    return amount * purchasePrice.value;
+  } else {
+    return amount / salePrice.value;
+  }
+}
+
+// Uso en el componente
+const result = computed(() => {
+  if (!amount.value) return '';
+  
+  const numericAmount = parseFloat(amount.value);
+  if (isNaN(numericAmount)) return '';
+  
+  return exchangeStore.convert(
+    numericAmount,
+    activeTab.value === 'Compra' ? 'USD' : 'PEN',
+    activeTab.value === 'Compra' ? 'PEN' : 'USD'
+  ).toFixed(2);
+});</code></pre>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h2 id="suscripciones">3.3 Manejo de Suscripciones</h2>
+            <p>La suscripción a las tasas de cambio se maneja de la siguiente manera:</p>
+            <pre><code>// En store/exchange.ts
+import { onUnmounted, ref } from 'vue';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '@/firebase/config';
+
+export const useExchangeStore = defineStore('exchange', () => {
+  // Estado
+  const purchasePrice = ref(0);
+  const salePrice = ref(0);
+  const loading = ref(true);
+  const error = ref<string | null>(null);
+  let unsubscribe: (() => void) | null = null;
+
+  // Inicializar la suscripción
+  function subscribeToRates() {
+    const ratesRef = doc(db, 'rates', 'current');
+    
+    unsubscribe = onSnapshot(
+      ratesRef,
+      (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          if (data) {
+            purchasePrice.value = data.purchase_price || 0;
+            salePrice.value = data.sale_price || 0;
+            loading.value = false;
+            error.value = null;
+          }
+        } else {
+          error.value = 'No se encontraron tasas de cambio';
+          loading.value = false;
+        }
+      },
+      (err) => {
+        console.error('Error en la suscripción:', err);
+        error.value = 'Error al cargar las tasas de cambio';
+        loading.value = false;
+      }
+    );
+  }
+
+  // Limpiar la suscripción
+  function unsubscribeFromRates() {
+    if (unsubscribe) {
+      unsubscribe();
+      unsubscribe = null;
+    }
+  }
+
+  // Limpiar al desmontar
+  onUnmounted(() => {
+    unsubscribeFromRates();
+  });
+
+  return {
+    purchasePrice,
+    salePrice,
+    loading,
+    error,
+    subscribeToRates,
+    unsubscribeFromRates
+  };
+});</code></pre>
+            <p>Esta implementación asegura que:</p>
+            <ul>
+                <li>Las suscripciones se limpian correctamente</li>
+                <li>Los errores se manejan apropiadamente</li>
+                <li>El estado de carga se actualiza correctamente</li>
+                <li>Los cambios en las tasas se reflejan en tiempo real</li>
+            </ul>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h1 id="preguntas-codigo">4. Preguntas de Código</h1>
+
+            <h2 id="handleinput">4.1 Explicar handleInput</h2>
+            <pre><code>const handleInput = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  
+  // Solo permite números y punto decimal
+  value = value.replace(/[^\d.]/g, '');
+  
+  // Maneja múltiples puntos decimales
+  const decimalSplit = value.split('.');
+  if (decimalSplit.length > 2) {
+    value = `${decimalSplit[0]}.${decimalSplit.slice(1).join('')}`;
+  }
+  
+  // Actualiza el valor
+  internalAmount.value = value;
+  displayAmount.value = value;
+};</code></pre>
+            <p>Esta función se encarga de:</p>
+            <ol>
+                <li>Obtener el valor del input</li>
+                <li>Filtrar caracteres no numéricos (excepto punto decimal)</li>
+                <li>Manejar múltiples puntos decimales</li>
+                <li>Actualizar las referencias reactivas</li>
+            </ol>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h2 id="suscripciones">4.2 Manejo de suscripciones</h2>
+            <pre><code>// En el setup
+const unsubscribe = onSnapshot(doc(db, 'rates/current'), (doc) => {
+  if (doc.exists()) {
+    const data = doc.data();
+    // Actualizar estado
+  }
+});
+
+// Limpieza obligatoria
+onUnmounted(() => {
+  if (unsubscribe) unsubscribe();
+});</code></pre>
+            <p>Puntos clave:</p>
+            <ul>
+                <li>Siempre guardar la función de unsubscribe</li>
+                <li>Limpiar en onUnmounted</li>
+                <li>Verificar si existe antes de llamar</li>
+            </ul>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+
+            <h2 id="computed-vs-watch">6.3 Uso de computed vs watch</h2>
+            <p><strong>Computed</strong> - Para valores derivados sincrónicos:</p>
+            <pre><code>// Bueno para cálculos
+const total = computed(() => price.value * quantity.value);</code></pre>
+
+            <p><strong>Watch</strong> - Para efectos secundarios y operaciones asíncronas:</p>
+            <pre><code>// Bueno para side effects
+watch(selectedCurrency, async (newVal) => {
+  await fetchRates(newVal);
+}, { immediate: true });</code></pre>
+            <a href="#" class="back-to-top">↑ Volver al inicio</a>
+
+            <h1 id="decisiones-arquitectura">4. Decisiones de Arquitectura</h1>
+
+            <div class="qa">
+                <h3>¿Por qué se eligió Vue 3 Composition API en lugar de Options API o Nuxt?</h3>
+                
+                <h4>Vue 3 Composition API vs Options API:</h4>
+                <p>Se eligió Composition API por varias razones clave:</p>
+                <ul>
+                    <li><strong>Mejor organización del código:</strong> La lógica relacionada se agrupa por características en lugar de dividirse entre data, methods, computed, etc.</li>
+                    <li><strong>Reutilización de código:</strong> Permite extraer y reutilizar lógica entre componentes mediante composables.</li>
+                    <li><strong>Mejor tipado con TypeScript:</strong> La Composition API ofrece una mejor integración y soporte de tipos.</li>
+                    <li><strong>Más flexible:</strong> Facilita la extracción y composición de lógica compleja.</li>
+                </ul>
+                
+                <p><strong>Ejemplo de ventaja con Composition API:</strong></p>
+                <pre><code>// Con Composition API
+import { ref, computed } from 'vue';
+
+export function useCurrencyConverter() {
+  const amount = ref('');
+  const rate = ref(3.8);
+  
+  const convertedAmount = computed(() => {
+    return parseFloat(amount.value) * rate.value;
+  });
+  
+  return { amount, rate, convertedAmount };
+}
+
+// Uso en cualquier componente
+const { amount, rate, convertedAmount } = useCurrencyConverter();</code></pre>
+
+                <h4>¿Por qué no se usó Nuxt?</h4>
+                <p>No se utilizó Nuxt porque:</p>
+                <ul>
+                    <li><strong>Complejidad innecesaria:</strong> Para una aplicación SPA relativamente simple como un conversor de monedas, Nuxt añadiría complejidad sin beneficios significativos.</li>
+                    <li><strong>Rendimiento:</strong> No se requería SSR (Server-Side Rendering) ni SSG (Static Site Generation) para este caso de uso.</li>
+                    <li><strong>Mantenimiento:</strong> Un proyecto más pequeño es más fácil de mantener sin la capa adicional de abstracción que proporciona Nuxt.</li>
+                    <li><strong>Rendimiento inicial:</strong> La aplicación se carga rápidamente sin necesidad de las optimizaciones de Nuxt.</li>
+                </ul>
+                
+                <h4>Cuándo sí usar Nuxt:</h4>
+                <ul>
+                    <li>Aplicaciones que necesitan SEO mejorado (SSR/SSG)</li>
+                    <li>Proyectos grandes con múltiples rutas y layouts</li>
+                    <li>Cuando necesitas las convenciones de estructura de archivos de Nuxt</li>
+                    <li>Para aprovechar módulos de Nuxt como Nuxt Image, Nuxt Content, etc.</li>
+                </ul>
+                <a href="#" class="back-to-top">↑ Volver al inicio</a>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
