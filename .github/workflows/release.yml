@@ -1,4 +1,4 @@
-name: Release
+name: Frontend / Release
 
 on:
   push:
@@ -6,6 +6,6 @@ on:
       - "v*"
 
 jobs:
-  Release:
-    uses: juv-dev/workflows-frontend/.github/workflows/release.yml@main
+  release:
+    uses: juv-dev/workflows-frontend/.github/workflows/release-please.yml@v1.1.0
     secrets: inherit

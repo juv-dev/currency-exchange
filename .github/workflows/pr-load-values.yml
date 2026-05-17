@@ -1,10 +1,10 @@
-name: CI
+name: Frontend / Load Values
 
 on:
   pull_request:
     branches: [main, develop]
 
 jobs:
-  PR:
-    uses: juv-dev/workflows-frontend/.github/workflows/pr-load-values.yml@main
+  load-values:
+    uses: juv-dev/workflows-frontend/.github/workflows/pr-load-values.yml@v1.1.0
     secrets: inherit

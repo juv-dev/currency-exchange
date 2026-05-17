@@ -1,4 +1,4 @@
-name: CI
+name: Frontend / Unit Tests
 
 on:
   pull_request:
@@ -9,6 +9,6 @@ permissions:
   contents: read
 
 jobs:
-  PR:
-    uses: juv-dev/workflows-frontend/.github/workflows/pr-unit-test.yml@main
+  unit-test:
+    uses: juv-dev/workflows-frontend/.github/workflows/pr-unit-test.yml@v1.1.0
     secrets: inherit

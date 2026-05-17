@@ -1,9 +1,9 @@
-name: CI
+name: Frontend / Validate Tag
 
 on:
   pull_request:
     branches: [main, develop]
 
 jobs:
-  PR:
-    uses: juv-dev/workflows-frontend/.github/workflows/pr-validate-tag.yml@main
+  validate-tag:
+    uses: juv-dev/workflows-frontend/.github/workflows/pr-validate-tag.yml@v1.1.0
