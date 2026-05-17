@@ -1,9 +1,0 @@
-name: Frontend / Validate Tag
-
-on:
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  run:
-    uses: juv-dev/workflows-frontend/.github/workflows/pr-validate-tag.yml@v1.1.0

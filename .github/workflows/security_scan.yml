@@ -1,0 +1,14 @@
+name: Workflow Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  Security:
+    name: Scan
+    uses: juv-dev/workflows-frontend/.github/workflows/frontend-security-scan.yml@main

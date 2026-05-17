@@ -1,0 +1,12 @@
+name: Workflow Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  Release:
+    name: Release
+    uses: juv-dev/workflows-frontend/.github/workflows/frontend-release.yml@main
+    secrets: inherit

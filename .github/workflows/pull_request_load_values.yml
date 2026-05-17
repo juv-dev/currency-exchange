@@ -1,0 +1,11 @@
+name: Workflow PR Load Values
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  Pull_Request:
+    name: PR
+    uses: juv-dev/workflows-frontend/.github/workflows/frontend-pr-load-values.yml@main
+    secrets: inherit
