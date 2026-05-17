@@ -9,6 +9,6 @@ permissions:
   contents: read
 
 jobs:
-  unit-test:
+  run:
     uses: juv-dev/workflows-frontend/.github/workflows/pr-unit-test.yml@v1.1.0
     secrets: inherit

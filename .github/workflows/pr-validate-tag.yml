@@ -5,5 +5,5 @@ on:
     branches: [main, develop]
 
 jobs:
-  validate-tag:
+  run:
     uses: juv-dev/workflows-frontend/.github/workflows/pr-validate-tag.yml@v1.1.0
