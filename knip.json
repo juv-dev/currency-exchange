@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreExportsUsedInFile": true,
+  "rules": {
+    "exports": "warn",
+    "types": "warn",
+    "files": "warn",
+    "dependencies": "warn",
+    "devDependencies": "warn",
+    "binaries": "warn"
+  }
+}
