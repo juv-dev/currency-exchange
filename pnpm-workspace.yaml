@@ -1,11 +1,21 @@
 packages:
   - .
 
-onlyBuiltDependencies:
-  - esbuild
-  - vue-demi
+allowBuilds:
+  esbuild: true
+  vue-demi: true
+  '@tailwindcss/oxide': true
+  '@firebase/util': true
+  protobufjs: true
 
-pnpm:
-  minimumReleaseAge: 1440
-  blockExoticSubdeps: true
-  trustPolicy: no-downgrade
+overrides:
+  protobufjs: "7.5.9"
+  postcss: "8.5.15"
+  js-cookie: "3.0.7"
+  ws: "8.21.0"
+
+minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  - ws
+blockExoticSubdeps: true
+strictDepBuilds: true
